@@ -14,6 +14,7 @@ import { Label } from "~/components/ui/label";
 import { useFrameSDK } from "~/hooks/useFrameSDK";
 import { baseUSDC } from "@daimo/contract";
 import { getAddress } from "viem";
+import DonateRandom from "~/components/DonateRandom";
 import BucketExplorer from "./BucketExplorer";
 
 function ExampleCard() {
@@ -86,6 +87,7 @@ export default function MiniApp() {
     <div className="w-[400px] mx-auto py-2 px-2 space-y-4">
       <ExampleCard />
       <PaymentComponent />
+      <DonateRandom />
       <FileUploadCard />
       <BucketExplorer />
     </div>

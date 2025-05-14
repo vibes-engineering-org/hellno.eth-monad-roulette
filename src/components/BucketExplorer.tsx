@@ -174,3 +174,13 @@ export default function BucketExplorer() {
     </Card>
   );
 }
+'use client';
+
+export default function BucketExplorer() {
+  return (
+    <div className="mt-4 p-4 border rounded-md">
+      <h2 className="text-lg font-semibold">Bucket Explorer</h2>
+      <p className="text-sm text-gray-600">Placeholder component</p>
+    </div>
+  );
+}
