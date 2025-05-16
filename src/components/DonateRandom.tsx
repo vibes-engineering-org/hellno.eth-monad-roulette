@@ -1,22 +1,23 @@
 'use client';
 
 import { useState } from "react";
-import { useAccount, useSigner } from "wagmi";
+import { useAccount, useWalletClient, usePublicClient } from "wagmi";
 import { parseUnits } from "viem";
 import { Button } from "~/components/ui/button";
 
 export default function DonateRandom() {
   const { address } = useAccount();
-  const { data: signer } = useSigner();
+  const { data: walletClient } = useWalletClient();
+  const publicClient = usePublicClient();
   const [amount, setAmount] = useState("0.01");
   const [isDonating, setIsDonating] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
-  const [recipient, setRecipient] = useState<string | null>(null);
+  const [recipient, setRecipient] = useState<`0x${string}` | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const donateRandom = async () => {
     setError(null);
-    if (!address || !signer) {
+    if (!address || !walletClient) {
       setError("Wallet not connected");
       return;
     }
@@ -28,13 +29,14 @@ export default function DonateRandom() {
       const follows: string[] = data.follows;
       if (!follows.length) throw new Error("You don’t follow anyone");
       const rec = follows[Math.floor(Math.random() * follows.length)];
-      setRecipient(rec);
-      const tx = await signer.sendTransaction({
-        to: rec,
-        value: parseUnits(amount, "ether"),
+      const recAddress = rec as `0x${string}`;
+      setRecipient(recAddress);
+      const hash = await walletClient.sendTransaction({
+        to: recAddress,
+        value: parseUnits(amount, 18),
       });
-      await tx.wait();
-      setTxHash(tx.hash);
+      await publicClient.waitForTransactionReceipt({ hash });
+      setTxHash(hash);
     } catch (err: any) {
       setError(err.message);
     }
