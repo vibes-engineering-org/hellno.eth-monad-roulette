@@ -17,8 +17,8 @@ export default function DonateRandom() {
 
   const donateRandom = async () => {
     setError(null);
-    if (!address || !walletClient) {
-      setError("Wallet not connected");
+    if (!address || !walletClient || !publicClient) {
+      setError("Wallet or public client not connected");
       return;
     }
     setIsDonating(true);
@@ -35,7 +35,7 @@ export default function DonateRandom() {
         to: recAddress,
         value: parseUnits(amount, 18),
       });
-      await publicClient.waitForTransactionReceipt({ hash });
+      await publicClient!.waitForTransactionReceipt({ hash });
       setTxHash(hash);
     } catch (err: any) {
       setError(err.message);
